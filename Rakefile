@@ -11,7 +11,8 @@ begin
     gem.homepage = "http://github.com/thuss/standalone-migrations"
     gem.authors = ["Todd Huss", "Michael Grosser"]
     gem.files += ["lib/tasks/*"]
-    %w[rake activerecord].each{|d| gem.add_dependency d}
+    gem.add_dependency "activerecord", "~> 3.0.3"
+    gem.add_dependency "rake", "~> 0.8"
   end
 
   Jeweler::GemcutterTasks.new

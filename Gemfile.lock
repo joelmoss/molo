@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     standalone_migrations (0.3.0)
-      activerecord
-      rake
+      activerecord (~> 3.0.3)
+      rake (~> 0.8)
 
 GEM
   remote: http://rubygems.org/
@@ -28,6 +28,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord
-  rake
+  activerecord (~> 3.0.3)
+  rake (~> 0.8)
   standalone_migrations!
