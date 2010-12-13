@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{Molo}
-  s.version = "0.3.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joel Moss", "Todd Huss", "Michael Grosser"]
@@ -18,10 +18,12 @@ Gem::Specification.new do |s|
     ".gitignore",
      "Gemfile",
      "Gemfile.lock",
+     "Molo.gemspec",
      "README.markdown",
      "Rakefile",
      "VERSION",
      "lib/tasks/molo.rb",
+     "spec/molo_spec.rb",
      "vendor/migration_helpers/MIT-LICENSE",
      "vendor/migration_helpers/README.markdown",
      "vendor/migration_helpers/init.rb",
