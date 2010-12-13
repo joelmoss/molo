@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{standalone_migrations}
+  s.name = %q{Molo}
   s.version = "0.3.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Todd Huss", "Michael Grosser"]
+  s.authors = ["Joel Moss", "Todd Huss", "Michael Grosser"]
   s.date = %q{2010-12-13}
-  s.email = %q{thuss@gabrito.com}
+  s.email = %q{joel@developwithstyle.com}
   s.extra_rdoc_files = [
     "README.markdown"
   ]
@@ -21,21 +21,19 @@ Gem::Specification.new do |s|
      "README.markdown",
      "Rakefile",
      "VERSION",
-     "lib/tasks/standalone_migrations.rb",
-     "spec/standalone_migrations_spec.rb",
-     "standalone_migrations.gemspec",
+     "lib/tasks/molo.rb",
      "vendor/migration_helpers/MIT-LICENSE",
      "vendor/migration_helpers/README.markdown",
      "vendor/migration_helpers/init.rb",
      "vendor/migration_helpers/lib/migration_helper.rb"
   ]
-  s.homepage = %q{http://github.com/thuss/standalone-migrations}
+  s.homepage = %q{http://codaset.com/joelmoss/molo}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{A thin wrapper to use Rails Migrations in non Rails projects}
   s.test_files = [
-    "spec/standalone_migrations_spec.rb"
+    "spec/molo_spec.rb"
   ]
 
   if s.respond_to? :specification_version then

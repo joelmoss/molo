@@ -5,11 +5,11 @@ Spec::Rake::SpecTask.new {|t| t.spec_opts = ['--color']}
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = 'standalone_migrations'
+    gem.name = 'Molo'
     gem.summary = "A thin wrapper to use Rails Migrations in non Rails projects"
-    gem.email = "thuss@gabrito.com"
-    gem.homepage = "http://github.com/thuss/standalone-migrations"
-    gem.authors = ["Todd Huss", "Michael Grosser"]
+    gem.email = "joel@developwithstyle.com"
+    gem.homepage = "http://codaset.com/joelmoss/molo"
+    gem.authors = ["Joel Moss","Todd Huss", "Michael Grosser"]
     gem.files += ["lib/tasks/*"]
     gem.add_dependency "activerecord", "~> 3.0.3"
     gem.add_dependency "rake", "~> 0.8"

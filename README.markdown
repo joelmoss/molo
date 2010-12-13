@@ -1,13 +1,16 @@
+Molo
+====
+
 Rails migrations in non-Rails (and non Ruby) projects.  
 
-USAGE
-=====
 Install Ruby, RubyGems and a ruby-database driver (e.g. `gem install mysql`) then:
-    sudo gem install standalone_migrations
+
+    sudo gem install molo
 
 Add to `Rakefile` in your projects base directory:
+
     begin
-      require 'tasks/standalone_migrations'
+      require 'tasks/molo'
       MigratorTasks.new do |t|
         # t.migrations = "db/migrations"
         # t.config = "db/config.yml"
@@ -18,10 +21,11 @@ Add to `Rakefile` in your projects base directory:
         # t.log_level = Logger::ERROR
       end
     rescue LoadError => e
-      puts "gem install standalone_migrations to get db:migrate:* tasks! (Error: #{e})"
+      puts "gem install molo to get db:migrate:* tasks! (Error: #{e})"
     end
 
 Add database configuration to `db/config.yml` in your projects base directory e.g.:
+
     development:
       adapter: sqlite3
       database: db/development.sqlite3
@@ -81,6 +85,7 @@ Contributors
 ============
 This work is based on [Lincoln Stoll's blog post](http://lstoll.net/2008/04/stand-alone-activerecord-migrations/) and [David Welton's post](http://journal.dedasys.com/2007/01/28/using-migrations-outside-of-rails).
 
+ - [Joel Moss](http://developwithstyle.com/)
  - [Todd Huss](http://gabrito.com/)
  - [Michael Grosser](http://pragmatig.wordpress.com)
  - [Eric Lindvall](http://bitmonkey.net)

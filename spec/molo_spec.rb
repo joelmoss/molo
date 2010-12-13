@@ -1,4 +1,4 @@
-describe 'Standalone migrations' do
+describe 'Molo' do
   def write(file, content)
     raise "cannot write nil" unless file
     file = tmp_file(file)
@@ -37,13 +37,13 @@ describe 'Standalone migrations' do
     write 'Rakefile', <<-TXT
       $LOAD_PATH.unshift '#{File.expand_path('lib')}'
       begin
-        require 'tasks/standalone_migrations'
+        require 'tasks/molo'
         MigratorTasks.new do |t|
           t.log_level = Logger::INFO
           #{config}
         end
       rescue LoadError => e
-        puts "gem install standalone_migrations to get db:migrate:* tasks! (Error: \#{e})"
+        puts "gem install molo to get db:migrate:* tasks! (Error: \#{e})"
       end
     TXT
   end
