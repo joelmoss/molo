@@ -55,38 +55,120 @@ class MigratorTasks < ::Rake::TaskLib
       desc "Migrate the database using the scripts in the migrations directory. Target specific version with VERSION=x. Turn off output with VERBOSE=false."
       task :migrate => :ar_init  do
         require "#{@vendor}/migration_helpers/init"
-        ActiveRecord::Migration.verbose = ENV['VERBOSE'] || @verbose
+        ActiveRecord::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true        
         @migrations.each do |path|
           ActiveRecord::Migrator.migrate(path, ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
         end
-        Rake::Task["db:schema:dump"].execute
+        Rake::Task["db:schema:dump"].invoke if ActiveRecord::Base.schema_format == :ruby
       end
 
       namespace :migrate do
-        [:up, :down].each do |direction|
-          desc "Runs the '#{direction}' for a given migration VERSION."
-          task direction => :ar_init do
-            ActiveRecord::Migration.verbose = @verbose
-            version = ENV["VERSION"].to_i
-            raise "VERSION is required (must be a number)" if version == 0
-            migration_path = nil
-            if @migrations.length == 1
-              migration_path = @migrations.first
-            else
-              @migrations.each do |path|
-                Dir[File.join(path, '*.rb')].each do |file|
-                  if File.basename(file).match(/^\d+/)[0] == version.to_s
-                    migration_path = path
-                    break
-                  end
-                end
-              end
-              raise "Migration #{version} wasn't found on paths #{@migrations.join(', ')}" if migration_path.nil?
-            end
-            ActiveRecord::Migrator.run(direction, migration_path, version)
-            Rake::Task["db:schema:dump"].execute
+        desc 'Rollbacks the database one migration and re migrate up (options: STEP=x, VERSION=x).'
+        task :redo => :ar_init do
+          if ENV["VERSION"]
+            Rake::Task["db:migrate:down"].invoke
+            Rake::Task["db:migrate:up"].invoke
+          else
+            Rake::Task["db:rollback"].invoke
+            Rake::Task["db:migrate"].invoke
           end
         end
+        
+        desc 'Runs the "up" for a given migration VERSION.'
+        task :up => :ar_init do
+          ActiveRecord::Migration.verbose = @verbose
+          version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
+          raise "VERSION is required" unless version
+          
+          migration_path = nil
+          if @migrations.length == 1
+            migration_path = @migrations.first
+          else
+            @migrations.each do |path|
+              Dir[File.join(path, '*.rb')].each do |file|
+                if File.basename(file).match(/^\d+/)[0] == version.to_s
+                  migration_path = path
+                  break
+                end
+              end
+            end
+            raise "Migration #{version} wasn't found on paths #{@migrations.join(', ')}" if migration_path.nil?
+          end
+          
+          ActiveRecord::Migrator.run(:up, migration_path, version)
+          Rake::Task["db:schema:dump"].invoke if ActiveRecord::Base.schema_format == :ruby
+        end
+
+        desc 'Runs the "down" for a given migration VERSION.'
+        task :down => :ar_init do
+          ActiveRecord::Migration.verbose = @verbose
+          version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
+          raise "VERSION is required" unless version
+          
+          migration_path = nil
+          if @migrations.length == 1
+            migration_path = @migrations.first
+          else
+            @migrations.each do |path|
+              Dir[File.join(path, '*.rb')].each do |file|
+                if File.basename(file).match(/^\d+/)[0] == version.to_s
+                  migration_path = path
+                  break
+                end
+              end
+            end
+            raise "Migration #{version} wasn't found on paths #{@migrations.join(', ')}" if migration_path.nil?
+          end
+          
+          ActiveRecord::Migrator.run(:down, migration_path, version)
+          Rake::Task["db:schema:dump"].invoke if ActiveRecord::Base.schema_format == :ruby
+        end
+        
+        desc "Display status of migrations"
+        task :status => :ar_init do
+          config = ActiveRecord::Base.configurations[ENV[@env]]
+          ActiveRecord::Base.establish_connection(config)
+          unless ActiveRecord::Base.connection.table_exists?(ActiveRecord::Migrator.schema_migrations_table_name)
+            puts 'Schema migrations table does not exist yet.'
+            next  # means "return" for rake task
+          end
+          db_list = ActiveRecord::Base.connection.select_values("SELECT version FROM #{ActiveRecord::Migrator.schema_migrations_table_name}")
+          file_list = []
+          @migrations.each do |dir|
+            Dir.foreach(dir) do |file|
+              # only files matching "20091231235959_some_name.rb" pattern
+              if match_data = /(\d{14})_(.+)\.rb/.match(file)
+                status = db_list.delete(match_data[1]) ? 'up' : 'down'
+                file_list << [status, match_data[1], match_data[2]]
+              end
+            end
+          end
+          # output
+          puts "\ndatabase: #{config['database']}\n\n"
+          puts "#{"Status".center(8)}  #{"Migration ID".ljust(14)}  Migration Name"
+          puts "-" * 50
+          file_list.each do |file|
+            puts "#{file[0].center(8)}  #{file[1].ljust(14)}  #{file[2].humanize}"
+          end
+          db_list.each do |version|
+            puts "#{'up'.center(8)}  #{version.ljust(14)}  *** NO FILE ***"
+          end
+          puts
+        end
+      end
+  
+      desc 'Rolls the schema back to the previous version (specify steps w/ STEP=n).'
+      task :rollback => :ar_init do
+        step = ENV['STEP'] ? ENV['STEP'].to_i : 1
+        @migrations.each do |path|
+          ActiveRecord::Migrator.rollback(path, step)
+        end
+        Rake::Task["db:schema:dump"].invoke if ActiveRecord::Base.schema_format == :ruby
+      end
+  
+      desc "Retrieves the current schema version number"
+      task :version => :ar_init do
+        puts "Current version: #{ActiveRecord::Migrator.current_version}"
       end
   
       desc "Raises an error if there are pending migrations"
