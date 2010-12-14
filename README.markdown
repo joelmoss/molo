@@ -1,9 +1,33 @@
-Molo
+Molo (We're riding solo!)
 ====
 
-Rails migrations in non-Rails (and non Ruby) projects.  
+Molo provides Rails database migrations for non-Rails and non-Ruby projects. By dropping a Rakefile into your projects root, Molo will provide you with a list of Rake tasks for managing your database schema and data.
 
-Install Ruby, RubyGems and a ruby-database driver (e.g. `gem install mysql`) then:
+The following tasks are provided:
+
+    rake db:data:dump       # Dump contents of database to db/data.extension (defaults to yaml)
+    rake db:data:dump_dir   # Dump contents of database to db/data/tablename.extension (defaults to yaml)
+    rake db:data:load       # Load contents of db/data.extension (defaults to yaml) into database
+    rake db:data:load_dir   # Load contents of db/data/* into database
+    rake db:dump            # Dump schema and data to db/schema.rb and db/data.yml
+    rake db:load            # Load schema and data from db/schema.rb and db/data.yml
+    rake db:migrate         # Migrate the database using the scripts in the migrations directory.
+    rake db:migrate:down    # Runs the "down" for a given migration VERSION.
+    rake db:migrate:redo    # Rollbacks the database one migration and re migrate up (options: STEP=x, VERSION=x).
+    rake db:migrate:status  # Display status of migrations
+    rake db:migrate:up      # Runs the "up" for a given migration VERSION.
+    rake db:new_migration   # Create a new migration
+    rake db:rollback        # Rolls the schema back to the previous version (specify steps w/ STEP=n).
+    rake db:schema:dump     # Create schema.rb file that can be portably used against any DB supported by AR
+    rake db:schema:load     # Load a ar_schema.rb file into the database
+    rake db:test:load       # Recreate the test database from the current schema.rb
+    rake db:test:prepare    # Check for pending migrations and load the test schema
+    rake db:test:purge      # Empty the test database
+    rake db:version         # Retrieves the current schema version number
+
+### Installation
+
+Install Ruby, RubyGems and a ruby-database driver (e.g. `gem install mysql2`) then:
 
     sudo gem install molo
 
@@ -21,10 +45,10 @@ Add to `Rakefile` in your projects base directory:
         # t.log_level = Logger::ERROR
       end
     rescue LoadError => e
-      puts "gem install molo to get db:migrate:* tasks! (Error: #{e})"
+      puts "Run 'gem install molo' to get db:migrate:* tasks! (Error: #{e})"
     end
 
-Add database configuration to `db/config.yml` in your projects base directory e.g.:
+Create a `db` directory at your project root and add database configuration to `db/config.yml`. Here's an example DB config.
 
     development:
       adapter: sqlite3
@@ -42,7 +66,7 @@ Add database configuration to `db/config.yml` in your projects base directory e.
       password:
       socket: /var/run/mysqld/mysqld.sock
 
-    test: &test
+    test:
       adapter: sqlite3
       database: db/test.sqlite3
       pool: 5
