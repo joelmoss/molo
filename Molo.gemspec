@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{molo}
-  s.version = "0.5.0"
+  s.version = "0.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Joel Moss", "Todd Huss", "Michael Grosser"]
@@ -27,7 +27,19 @@ Gem::Specification.new do |s|
      "vendor/migration_helpers/MIT-LICENSE",
      "vendor/migration_helpers/README.markdown",
      "vendor/migration_helpers/init.rb",
-     "vendor/migration_helpers/lib/migration_helper.rb"
+     "vendor/migration_helpers/lib/migration_helper.rb",
+     "vendor/yaml_db/init.rb",
+     "vendor/yaml_db/lib/csv_db.rb",
+     "vendor/yaml_db/lib/serialization_helper.rb",
+     "vendor/yaml_db/lib/yaml_db.rb",
+     "vendor/yaml_db/spec/base.rb",
+     "vendor/yaml_db/spec/serialization_helper_base_spec.rb",
+     "vendor/yaml_db/spec/serialization_helper_dump_spec.rb",
+     "vendor/yaml_db/spec/serialization_helper_load_spec.rb",
+     "vendor/yaml_db/spec/serialization_utils_spec.rb",
+     "vendor/yaml_db/spec/yaml_dump_spec.rb",
+     "vendor/yaml_db/spec/yaml_load_spec.rb",
+     "vendor/yaml_db/spec/yaml_utils_spec.rb"
   ]
   s.homepage = %q{http://codaset.com/joelmoss/molo}
   s.rdoc_options = ["--charset=UTF-8"]
