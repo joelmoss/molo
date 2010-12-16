@@ -17,7 +17,7 @@ module SerializationHelper
 
     def dump_to_dir(dirname, *opts)
       options = opts.extract_options!
-      Dir.mkdir(dirname)
+      begin; Dir.mkdir(dirname); rescue; end;
       tables = @dumper.tables
       tables.each do |table|
         next if options[:except].include? table
