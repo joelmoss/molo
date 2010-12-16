@@ -38,9 +38,7 @@ module SerializationHelper
 
     def load_from_dir(dirname, truncate = true)
       Dir.entries(dirname).each do |filename|
-        if filename =~ /^[.]/
-          next
-        end
+        next if filename =~ /^[.]/
         @loader.load(File.new("#{dirname}/#{filename}", "r"), truncate)
       end   
     end
@@ -72,9 +70,7 @@ module SerializationHelper
 
     def self.load_table(table, data, truncate = true)
       column_names = data['columns']
-      if truncate
-        truncate_table(table)
-      end
+      truncate_table(table) if truncate
       load_records(table, column_names, data['records'])
       reset_pk_sequence!(table)
     end
