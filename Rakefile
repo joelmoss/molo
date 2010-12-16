@@ -9,7 +9,7 @@ begin
     gem.summary = "A thin wrapper to use Rails Migrations in non Rails projects"
     gem.email = "joel@developwithstyle.com"
     gem.homepage = "http://codaset.com/joelmoss/molo"
-    gem.authors = ["Joel Moss","Todd Huss", "Michael Grosser"]
+    gem.authors = ["Joel Moss", "Todd Huss", "Michael Grosser"]
     gem.files += ["lib/tasks/*"]
     gem.add_dependency "activerecord", "~> 3.0.3"
     gem.add_dependency "rake", "~> 0.8"

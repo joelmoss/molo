@@ -35,6 +35,7 @@ class MigratorTasks < ::Rake::TaskLib
         require 'active_record'
         require 'erb'
         require 'yaml_db'
+        require 'rails_sql_views'
         
         ENV[@env] ||= @default_env
 
