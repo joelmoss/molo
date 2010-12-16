@@ -213,7 +213,12 @@ class MigratorTasks < ::Rake::TaskLib
     	task(:load => [ "db:schema:load", "db:data:load" ])
 
     	namespace :data do
-    		def db_dump_data_file (extension = "yml")
+        table_options = {
+          :only => ENV['only'] || [],
+          :except => ENV['except'] || []
+        }
+    	  
+    		def db_dump_data_file(extension = "yml")
     		  "#{dump_dir}/data.#{extension}"
         end
             
@@ -225,14 +230,14 @@ class MigratorTasks < ::Rake::TaskLib
     		task :dump => :ar_init do
           format_class = ENV['class'] || "YamlDb::Helper"
           helper = format_class.constantize
-    			SerializationHelper::Base.new(helper).dump db_dump_data_file helper.extension
+    			SerializationHelper::Base.new(helper).dump db_dump_data_file(helper.extension), table_options
     		end
 
     		desc "Dump contents of database to db/data/tablename.extension (defaults to yaml)"
     		task :dump_dir => :ar_init do
           format_class = ENV['class'] || "YamlDb::Helper"
           dir = ENV['dir'] || "data"
-          SerializationHelper::Base.new(format_class.constantize).dump_to_dir dump_dir("/#{dir}")
+          SerializationHelper::Base.new(format_class.constantize).dump_to_dir dump_dir("/#{dir}"), table_options
     		end
 
     		desc "Load contents of db/data.extension (defaults to yaml) into database"

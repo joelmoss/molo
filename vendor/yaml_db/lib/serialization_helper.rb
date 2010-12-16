@@ -9,16 +9,20 @@ module SerializationHelper
       @extension = helper.extension
     end
 
-    def dump(filename)
+    def dump(filename, *opts)
       disable_logger
-      @dumper.dump(File.new(filename, "w"))
+      @dumper.dump(File.new(filename, "w"), *opts)
       reenable_logger
     end
 
-    def dump_to_dir(dirname)
+    def dump_to_dir(dirname, *opts)
+      options = opts.extract_options!
       Dir.mkdir(dirname)
       tables = @dumper.tables
       tables.each do |table|
+        next if options[:except].include? table
+        next if !options[:only].include? table
+        
         io = File.new "#{dirname}/#{table}.#{@extension}", "w"
         @dumper.before_table(io, table)
         @dumper.dump_table io, table
@@ -141,8 +145,13 @@ module SerializationHelper
 
     end
 
-    def self.dump(io)
+    def self.dump(io, *opts)
+      options = opts.extract_options!
+      
       tables.each do |table|
+        next if options[:except].include? table
+        next if !options[:only].include? table
+        
         before_table(io, table)
         dump_table(io, table)
         after_table(io, table)
