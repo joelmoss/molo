@@ -20,12 +20,21 @@ module SerializationHelper
       
       except = options[:except].is_a?(String) ? options[:except].split(',') : options[:except]
       only = options[:only].is_a?(String) ? options[:only].split(',') : options[:only]
-      
+
       begin; Dir.mkdir(dirname); rescue; end;
       tables = @dumper.tables
       tables.each do |table|
-        next if except.include? table
-        next if !only.include? table
+        if except.present? and except.include? table
+          puts "    excluding #{table}"
+          next
+        end
+        
+        if only.present? and !only.include? table
+          puts "    excluding #{table}"
+          next
+        end
+
+        puts " -- dumping data: #{table}"
         
         io = File.new "#{dirname}/#{table}.#{@extension}", "w"
         @dumper.before_table(io, table)
@@ -152,8 +161,17 @@ module SerializationHelper
       only = options[:only].is_a?(String) ? options[:only].split(',') : options[:only]
       
       tables.each do |table|
-        next if except.include? table
-        next if !only.include? table
+        if except.present? and except.include? table
+          puts "    excluding #{table}"
+          next
+        end
+        
+        if only.present? and !only.include? table
+          puts "    excluding #{table}"
+          next
+        end
+
+        puts " -- dumping data: #{table}"
         
         before_table(io, table)
         dump_table(io, table)
