@@ -5,8 +5,8 @@ Molo provides Rails database migrations for non-Rails and non-Ruby projects. By 
 
 The following tasks are provided:
 
-    rake db:data:dump       # Dump contents of database to db/data.extension (defaults to yaml)
-    rake db:data:dump_dir   # Dump contents of database to db/data/tablename.extension (defaults to yaml)
+    rake db:data:dump       # Dump contents of database to db/data.extension (defaults to yaml; ignore tables with 'except' or ignore all those woth 'only')
+    rake db:data:dump_dir   # Dump contents of database to db/data/tablename.extension (defaults to yaml; ignore tables with 'except' or ignore all those woth 'only')
     rake db:data:load       # Load contents of db/data.extension (defaults to yaml) into database
     rake db:data:load_dir   # Load contents of db/data/* into database
     rake db:dump            # Dump schema and data to db/schema.rb and db/data.yml
