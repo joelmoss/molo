@@ -49,9 +49,26 @@ module SerializationHelper
       reenable_logger
     end
 
-    def load_from_dir(dirname, truncate = true)
+    def load_from_dir(dirname, *opts)
+      options = opts.extract_options!
+      
+      truncate = options[:truncate] || true
+      except = options[:except].is_a?(String) ? options[:except].split(',') : options[:except]
+      only = options[:only].is_a?(String) ? options[:only].split(',') : options[:only]
+      
       Dir.entries(dirname).each do |filename|
         next if filename =~ /^[.]/
+        table = filename.gsub(/\.[a-z]+/, "")
+        
+        if except.present? and except.include? table
+          puts "    excluding #{filename}"
+          next
+        end
+        
+        if only.present? and !only.include? table
+          puts "    excluding #{filename}"
+          next
+        end
         
         puts " -- loading data: #{filename}"
         

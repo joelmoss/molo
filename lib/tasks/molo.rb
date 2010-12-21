@@ -244,14 +244,14 @@ class MigratorTasks < ::Rake::TaskLib
     		task :load => :ar_init do
           format_class = ENV['class'] || "YamlDb::Helper"
           helper = format_class.constantize
-    			SerializationHelper::Base.new(helper).load(db_dump_data_file helper.extension)
+    			SerializationHelper::Base.new(helper).load db_dump_data_file(helper.extension), table_options
     		end
 
     		desc "Load contents of db/data/* into database"
     		task :load_dir  => :ar_init do
           dir = ENV['dir'] || "data"
           format_class = ENV['class'] || "YamlDb::Helper"
-    	    SerializationHelper::Base.new(format_class.constantize).load_from_dir dump_dir("/#{dir}")
+    	    SerializationHelper::Base.new(format_class.constantize).load_from_dir dump_dir("/#{dir}"), table_options
     		end
     	end
 
