@@ -148,7 +148,7 @@ module SerializationHelper
       records.each do |record|
         columns.each do |column|
           next if is_boolean(record[column])
-          record[column] = (record[column] == 't' or record[column] == '1')
+          record[column] = (record[column] == 't' or record[column] == '1' or record[column] === 1)
         end
       end
       records
